@@ -358,7 +358,23 @@ function App() {
             to celebrate the Walima of
           </motion.h2>
 
-          <motion.div variants={fadeIn} className="mb-8 relative">
+          <motion.div
+            variants={fadeIn}
+            className="mb-8 relative group"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            {/* Transparent hover rectangle */}
+            <motion.div
+              className="absolute inset-0 -m-6 rounded-2xl border border-gold-400/20 bg-white/5 backdrop-blur-sm pointer-events-none"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileHover={{ opacity: 1, scale: 1, borderColor: 'rgba(212,175,55,0.5)' }}
+              transition={{ duration: 0.4 }}
+            />
+            <motion.div
+              className="absolute inset-0 -m-6 rounded-2xl bg-gradient-to-br from-gold-400/5 via-transparent to-gold-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            />
+
             {/* Floating decorative stars */}
             <motion.div
               className="absolute -left-8 top-0 text-gold-400/30"
