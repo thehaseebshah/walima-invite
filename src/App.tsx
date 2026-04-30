@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { MapPin, Calendar, Clock, Phone, CheckCircle2, Heart, ChevronDown, Sparkles } from 'lucide-react';
 import { CursorGlow } from './components/CursorGlow';
 import { FloatingParticles } from './components/FloatingParticles';
@@ -11,41 +11,44 @@ import { DecorativeOrnaments } from './components/DecorativeOrnaments';
 import { OrnateDivider } from './components/OrnateDivider';
 import { CountdownTimer } from './components/CountdownTimer';
 
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || '';
-const REPO_OWNER = import.meta.env.VITE_REPO_OWNER || '';
-const REPO_NAME = import.meta.env.VITE_REPO_NAME || 'walima-invite';
-const FILE_PATH = 'rsvps.md';
+const WHATSAPP_NUMBER = '923324844004'; // Haseeb Shah
+const DEFAULT_GUEST_NAME = 'Valued Guest';
+
+function getInitialGuestName() {
+  if (typeof window === 'undefined') return DEFAULT_GUEST_NAME;
+
+  const params = new URLSearchParams(window.location.search);
+  const nameParam = params.get('n');
+  if (!nameParam) return DEFAULT_GUEST_NAME;
+
+  const formattedName = decodeURIComponent(nameParam)
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/[-_]/g, ' ');
+
+  return formattedName.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
 
 function App() {
-  const [guestName, setGuestName] = useState('Valued Guest');
+  const [guestName] = useState(getInitialGuestName);
   const [rsvpStatus, setRsvpStatus] = useState<string | null>(null);
   const [isFamilyComing, setIsFamilyComing] = useState<boolean | null>(null);
   const [familyMembersCount, setFamilyMembersCount] = useState<number>(2);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const shouldReduceMotion = useReducedMotion();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   });
+  const { scrollYProgress: pageScrollProgress } = useScroll();
 
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 100]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const nameParam = params.get('n');
-    if (nameParam) {
-      const formattedName = decodeURIComponent(nameParam)
-        .replace(/([a-z])([A-Z])/g, '$1 $2')
-        .replace(/[-_]/g, ' ');
-      const titleCase = formattedName.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-      setGuestName(titleCase);
-    }
-  }, []);
+  const progressWidth = useTransform(pageScrollProgress, [0, 1], ['0%', '100%']);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -53,68 +56,32 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleRSVPSubmit = async (e: React.FormEvent) => {
+  const handleRSVPSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!rsvpStatus) return;
+
     setIsSubmitting(true);
 
-    const timestamp = new Date().toISOString();
-    let rsvpDetails = `- **${guestName}**: Not Coming (${timestamp})\n`;
+    const coming = rsvpStatus === 'yes' ? 'Yes' : 'No';
+    const familyCount =
+      rsvpStatus === 'yes' && isFamilyComing
+        ? familyMembersCount
+        : rsvpStatus === 'yes'
+          ? 1
+          : 0;
 
-    if (rsvpStatus === 'yes') {
-      const familyDetails = isFamilyComing ? `with ${familyMembersCount} family member(s)` : 'alone';
-      rsvpDetails = `- **${guestName}**: Coming ${familyDetails} (${timestamp})\n`;
-    }
+    const message =
+      `*Walima RSVP*\n` +
+      `Name: ${guestName}\n` +
+      `Attending: ${coming}\n` +
+      `Family Members: ${familyCount}\n`;
 
-    try {
-      const getUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
-      const getResponse = await fetch(getUrl, {
-        headers: {
-          'Authorization': `Bearer ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
 
-      let currentContent = '';
-      let fileSha = '';
-
-      if (getResponse.ok) {
-        const fileData = await getResponse.json();
-        currentContent = decodeURIComponent(escape(window.atob(fileData.content)));
-        fileSha = fileData.sha;
-      } else if (getResponse.status === 404) {
-        currentContent = '# Walima RSVPs\n\n';
-      } else {
-        throw new Error('Failed to fetch existing RSVPs');
-      }
-
-      const newContent = currentContent + rsvpDetails;
-      const encodedContent = window.btoa(unescape(encodeURIComponent(newContent)));
-
-      const putResponse = await fetch(getUrl, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: `RSVP from ${guestName}`,
-          content: encodedContent,
-          sha: fileSha || undefined
-        })
-      });
-
-      if (!putResponse.ok) {
-        throw new Error('Failed to save RSVP');
-      }
-
-      setSubmitSuccess(true);
-    } catch (error) {
-      console.error("Error saving RSVP:", error);
-      alert('There was an issue saving your RSVP. Please try again or contact via WhatsApp.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    setIsSubmitting(false);
+    setSubmitSuccess(true);
   };
 
   const fadeIn = {
@@ -141,20 +108,20 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-slate-800 font-sans selection:bg-gold-500 selection:text-white overflow-x-hidden">
-      <CursorGlow />
-      <FloatingParticles />
+    <div className="min-h-screen bg-[var(--ivory)] text-slate-800 font-sans selection:bg-gold-500 selection:text-white overflow-x-hidden">
+      {!shouldReduceMotion && <CursorGlow />}
+      {!shouldReduceMotion && <FloatingParticles />}
       <GradientMesh />
-      <DecorativeOrnaments />
+      {!shouldReduceMotion && <DecorativeOrnaments />}
 
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 h-1 bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 z-[100]"
-        style={{ width: useTransform(useScroll().scrollYProgress, [0, 1], ['0%', '100%']) }}
+        style={{ width: progressWidth }}
       />
 
       {/* Floating Decorative Elements */}
-      <div className="fixed inset-0 pointer-events-none z-[2] overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none z-[2] overflow-hidden hidden md:block">
         <motion.div
           className="absolute top-20 right-10 w-32 h-32 rounded-full border-2 border-gold-400/25 animate-rotate-slow"
           style={{ y: scrollY * 0.05 }}
@@ -172,8 +139,12 @@ function App() {
       {/* Hero Section */}
       <motion.div
         ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden"
-        style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
+        className="relative min-h-screen flex items-center justify-center px-5 py-14 md:p-8 overflow-hidden"
+        style={{
+          opacity: shouldReduceMotion ? 1 : heroOpacity,
+          scale: shouldReduceMotion ? 1 : heroScale,
+          y: shouldReduceMotion ? 0 : heroY,
+        }}
       >
         {/* Islamic geometric pattern background */}
         <div className="absolute inset-0 islamic-pattern opacity-60 pointer-events-none" />
@@ -185,7 +156,7 @@ function App() {
         }} />
 
         {/* Animated rings */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 hidden md:flex items-center justify-center pointer-events-none">
           <div className="w-[700px] h-[700px] rounded-full border border-gold-400/25 animate-rotate-slow" />
           <div className="absolute w-[500px] h-[500px] rounded-full border border-gold-400/35 animate-rotate-slow" style={{ animationDirection: 'reverse', animationDuration: '45s' }} />
           <div className="absolute w-[300px] h-[300px] rounded-full border-2 border-gold-400/40 animate-rotate-slow" style={{ animationDuration: '60s' }} />
@@ -205,6 +176,7 @@ function App() {
         />
 
         {/* Bouncing material shapes */}
+        <div className="hidden md:block">
         <motion.div
           className="absolute top-[15%] left-[10%] w-12 h-12 rounded-xl bg-gold-400/25 backdrop-blur-sm border border-gold-400/40 shadow-lg shadow-gold-400/20 pointer-events-none"
           animate={{ y: [0, -50, 0], rotate: [0, 180, 360] }}
@@ -235,6 +207,7 @@ function App() {
           animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
           transition={{ type: "spring", stiffness: 60, damping: 15, repeat: Infinity, repeatDelay: 1, delay: 0.8 }}
         />
+        </div>
 
         {/* Additional large floating geometric shapes to fill empty spaces */}
         <motion.div
@@ -306,14 +279,14 @@ function App() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#FDFBF7] pointer-events-none z-10" />
 
         <motion.div
-          className="relative z-20 text-center max-w-3xl mx-auto"
+          className="hero-card relative z-20 text-center max-w-3xl mx-auto"
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
         >
-          <motion.div variants={fadeIn} className="mb-6">
+          <motion.div variants={fadeIn} className="mb-5">
             <motion.span
-              className="uppercase tracking-[0.3em] text-xs font-semibold text-gold-600 inline-block px-5 py-2.5 rounded-full border border-gold-400/30 bg-white/40 backdrop-blur-sm"
+              className="uppercase tracking-[0.24em] text-[10px] md:text-xs font-semibold text-gold-700 inline-flex items-center justify-center px-4 md:px-5 py-2.5 rounded-full border border-gold-400/35 bg-white/65 backdrop-blur-sm shadow-sm shadow-gold-400/10"
               whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(212,175,55,0.15)' }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
@@ -346,21 +319,21 @@ function App() {
             </motion.div>
           </motion.div>
 
-          <motion.h2 variants={fadeIn} className="text-xl md:text-2xl font-light italic mb-3 font-serif text-slate-600">
+          <motion.h2 variants={fadeIn} className="text-lg md:text-2xl font-light italic mb-3 font-serif text-slate-600">
             <TypewriterText text="We joyfully invite" speed={60} />
           </motion.h2>
 
-          <motion.h1 variants={fadeIn} className="text-5xl md:text-7xl font-serif font-bold text-navy-900 mb-3 tracking-tight">
+          <motion.h1 variants={fadeIn} className="text-5xl sm:text-6xl md:text-7xl font-serif font-bold text-navy-900 mb-3 tracking-tight leading-[0.95] text-balance">
             <ScrambleText text={guestName} duration={1200} />
           </motion.h1>
 
-          <motion.h2 variants={fadeIn} className="text-xl md:text-2xl font-light italic mb-4 font-serif text-slate-600">
+          <motion.h2 variants={fadeIn} className="text-lg md:text-2xl font-light italic mb-4 font-serif text-slate-600">
             to celebrate the Walima of
           </motion.h2>
 
           <motion.div
             variants={fadeIn}
-            className="mb-8 relative group"
+            className="mb-8 relative group rounded-[2rem]"
             whileHover={{ scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
@@ -392,7 +365,7 @@ function App() {
             </motion.div>
 
             <motion.h3
-              className="text-3xl md:text-5xl font-serif font-semibold text-navy-900 mb-2 relative inline-block"
+              className="text-3xl md:text-5xl font-serif font-semibold text-navy-900 mb-2 relative inline-block leading-tight"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
@@ -421,11 +394,17 @@ function App() {
           <motion.div variants={fadeIn} className="mb-8">
             <CountdownTimer targetDate="2026-05-03T13:00:00" />
           </motion.div>
+
+          <motion.div variants={fadeIn} className="flex flex-wrap items-center justify-center gap-3 text-xs md:text-sm text-slate-600">
+            <span className="rounded-full border border-gold-400/30 bg-white/55 px-4 py-2 backdrop-blur-sm">Sunday, 3 May</span>
+            <span className="rounded-full border border-gold-400/30 bg-white/55 px-4 py-2 backdrop-blur-sm">1:00 PM onwards</span>
+            <span className="rounded-full border border-gold-400/30 bg-white/55 px-4 py-2 backdrop-blur-sm">Mianwali, Punjab</span>
+          </motion.div>
         </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-0 right-0 mx-auto flex flex-col items-center gap-2 text-gold-500/70 z-20 w-fit"
+          className="absolute bottom-6 md:bottom-8 left-0 right-0 mx-auto flex flex-col items-center gap-2 text-gold-500/70 z-20 w-fit"
           animate={{ y: [0, 12, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
@@ -448,15 +427,15 @@ function App() {
       {/* Details Section */}
       <ParallaxLayer speed={0.3} direction="up">
         <motion.div
-          className="max-w-4xl mx-auto px-6 py-16 bg-white/80 backdrop-blur-sm rounded-t-[3rem] shadow-xl relative z-20 border border-white/50"
+          className="max-w-5xl mx-auto px-5 md:px-8 py-14 md:py-16 bg-white/85 backdrop-blur-sm rounded-[2.5rem] md:rounded-[3rem] shadow-2xl shadow-gold-900/5 relative z-20 border border-white/70"
           initial={{ opacity: 0, y: 60, scale: 0.95 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 1, ease: "easeOut" }}
         >
-          <div className="grid md:grid-cols-2 gap-12 text-center md:text-left">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 text-center md:text-left">
             <motion.div
-              className="space-y-8"
+              className="info-panel space-y-8"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -471,7 +450,7 @@ function App() {
 
               <motion.div
                 variants={slideIn}
-                className="flex flex-col md:flex-row items-center md:items-start gap-4 group"
+                className="detail-row flex flex-col md:flex-row items-center md:items-start gap-4 group"
                 whileHover={{ x: 5 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
@@ -499,7 +478,7 @@ function App() {
 
               <motion.div
                 variants={slideIn}
-                className="flex flex-col md:flex-row items-center md:items-start gap-4 group"
+                className="detail-row flex flex-col md:flex-row items-center md:items-start gap-4 group"
                 whileHover={{ x: 5 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
@@ -529,7 +508,7 @@ function App() {
             </motion.div>
 
             <motion.div
-              className="space-y-8"
+              className="info-panel space-y-8"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -551,7 +530,7 @@ function App() {
                   href="https://wa.me/923324844004"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:border-gold-400 hover:shadow-lg transition-all group card-hover relative overflow-hidden"
+                  className="contact-card flex items-center gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:border-gold-400 hover:shadow-lg transition-all group card-hover relative overflow-hidden"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -574,7 +553,7 @@ function App() {
                   href="https://wa.me/923334844004"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:border-gold-400 hover:shadow-lg transition-all group card-hover relative overflow-hidden"
+                  className="contact-card flex items-center gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:border-gold-400 hover:shadow-lg transition-all group card-hover relative overflow-hidden"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -599,7 +578,7 @@ function App() {
 
       {/* RSVP Section */}
       <ParallaxLayer speed={0.2} direction="up">
-        <div className="bg-navy-900 text-white py-20 px-6 relative z-10 overflow-hidden">
+        <div className="bg-navy-900 text-white py-20 px-5 md:px-6 relative z-10 overflow-hidden">
           {/* Animated background shapes */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <motion.div
@@ -637,7 +616,7 @@ function App() {
               <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
                 <ScrambleText text="RSVP" duration={800} />
               </h2>
-              <p className="text-slate-300">Please let us know if you will be joining us for the celebration.</p>
+              <p className="text-slate-300 text-balance">Please let us know if you will be joining us. Your response opens WhatsApp with a ready-to-send message.</p>
             </motion.div>
 
             <AnimatePresence mode="wait">
@@ -648,7 +627,7 @@ function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   onSubmit={handleRSVPSubmit}
-                  className="bg-navy-800/50 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-2xl border border-slate-700/50 relative overflow-hidden"
+                  className="bg-navy-800/60 backdrop-blur-md p-6 md:p-10 rounded-[2rem] shadow-2xl border border-white/10 relative overflow-hidden"
                 >
                   {/* Shimmer border effect */}
                   <div className="absolute inset-0 rounded-2xl border border-gold-400/0 hover:border-gold-400/20 transition-colors duration-500 pointer-events-none" />
@@ -656,11 +635,11 @@ function App() {
 
                   <div className="mb-8 relative z-10">
                     <label className="block text-lg font-medium mb-4 text-white">Are you coming?</label>
-                    <div className="flex gap-4">
+                    <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
                       <motion.button
                         type="button"
                         onClick={() => setRsvpStatus('yes')}
-                        className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all relative overflow-hidden ${rsvpStatus === 'yes' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/20' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'}`}
+                        className={`rsvp-choice py-3.5 px-5 rounded-2xl font-medium transition-all relative overflow-hidden ${rsvpStatus === 'yes' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/20 border-gold-300' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700 border-white/10'}`}
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
                       >
@@ -680,7 +659,7 @@ function App() {
                           setRsvpStatus('no');
                           setIsFamilyComing(null);
                         }}
-                        className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${rsvpStatus === 'no' ? 'bg-red-500/80 text-white shadow-lg' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'}`}
+                        className={`rsvp-choice py-3.5 px-5 rounded-2xl font-medium transition-all ${rsvpStatus === 'no' ? 'bg-red-500/80 text-white shadow-lg border-red-300/70' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700 border-white/10'}`}
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
                       >
@@ -698,11 +677,11 @@ function App() {
                         className="mb-8 overflow-hidden relative z-10"
                       >
                         <label className="block text-lg font-medium mb-4 text-white">Is your family coming with you?</label>
-                        <div className="flex gap-4">
+                        <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
                           <motion.button
                             type="button"
                             onClick={() => setIsFamilyComing(true)}
-                            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${isFamilyComing === true ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/20' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'}`}
+                            className={`rsvp-choice py-3.5 px-5 rounded-2xl font-medium transition-all ${isFamilyComing === true ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/20 border-gold-300' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700 border-white/10'}`}
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                           >
@@ -711,7 +690,7 @@ function App() {
                           <motion.button
                             type="button"
                             onClick={() => setIsFamilyComing(false)}
-                            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${isFamilyComing === false ? 'bg-slate-500 text-white shadow-lg' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'}`}
+                            className={`rsvp-choice py-3.5 px-5 rounded-2xl font-medium transition-all ${isFamilyComing === false ? 'bg-slate-500 text-white shadow-lg border-slate-300/60' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700 border-white/10'}`}
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                           >
@@ -739,7 +718,7 @@ function App() {
                           max="20"
                           value={familyMembersCount}
                           onChange={(e) => setFamilyMembersCount(parseInt(e.target.value) || 2)}
-                          className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
+                          className="w-full bg-slate-700/50 border border-slate-600 rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 transition-colors"
                           placeholder="e.g., 4"
                           whileFocus={{ scale: 1.01 }}
                         />
@@ -750,7 +729,7 @@ function App() {
                   <MagneticButton
                     type="submit"
                     disabled={!rsvpStatus || isSubmitting}
-                    className="w-full bg-gold-600 hover:bg-gold-500 text-white font-semibold py-4 px-8 rounded-lg shadow-xl shadow-gold-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 relative overflow-hidden group"
+                    className="w-full bg-gold-600 hover:bg-gold-500 text-white font-semibold py-4 px-8 rounded-2xl shadow-xl shadow-gold-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 relative overflow-hidden group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-400"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                     {isSubmitting ? (
@@ -768,7 +747,7 @@ function App() {
                   key="success"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-navy-800/50 backdrop-blur-md p-12 rounded-2xl shadow-2xl border border-slate-700/50 text-center relative overflow-hidden"
+                  className="bg-navy-800/60 backdrop-blur-md p-8 md:p-12 rounded-[2rem] shadow-2xl border border-white/10 text-center relative overflow-hidden"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-br from-gold-400/10 via-transparent to-gold-400/10"

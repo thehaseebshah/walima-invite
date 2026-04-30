@@ -16,10 +16,6 @@ export function ScrambleText({ text, className = '', delay = 0, duration = 1500 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    setDisplayText(text);
-  }, [text]);
-
-  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {

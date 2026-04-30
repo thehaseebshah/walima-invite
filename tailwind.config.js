@@ -8,9 +8,12 @@ export default {
     extend: {
       colors: {
         gold: {
+          300: '#E8D5A3',
           400: '#ecc94b',
           500: '#d69e2e',
           600: '#b7791f',
+          700: '#9F7624',
+          900: '#5F4314',
         },
         navy: {
           900: '#0a192f',
@@ -18,8 +21,8 @@ export default {
         }
       },
       fontFamily: {
-        serif: ['"Playfair Display"', 'serif'],
-        sans: ['"Inter"', 'sans-serif'],
+        serif: ['"Cormorant Garamond"', 'serif'],
+        sans: ['"Manrope"', 'sans-serif'],
       }
     },
   },

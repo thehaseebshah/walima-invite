@@ -11,32 +11,32 @@ interface TimeLeft {
   days: number;
   hours: number;
   minutes: number;
+  isPast: boolean;
+}
+
+function calculateTimeLeft(targetDate: string): TimeLeft {
+  const difference = new Date(targetDate).getTime() - new Date().getTime();
+
+  if (difference <= 0) {
+    return { days: 0, hours: 0, minutes: 0, isPast: true };
+  }
+
+  return {
+    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((difference / 1000 / 60) % 60),
+    isPast: false,
+  };
 }
 
 export function CountdownTimer({ targetDate, className = '' }: CountdownTimerProps) {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0 });
-  const [isLive, setIsLive] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(targetDate));
+
+  const isLive = timeLeft.isPast;
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = new Date(targetDate).getTime() - new Date().getTime();
-
-      if (difference <= 0) {
-        setIsLive(true);
-        return { days: 0, hours: 0, minutes: 0 };
-      }
-
-      return {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-      };
-    };
-
-    setTimeLeft(calculateTimeLeft());
-
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(calculateTimeLeft(targetDate));
     }, 60000); // Update every minute
 
     return () => clearInterval(timer);
