@@ -53,7 +53,7 @@ export function CursorGlow() {
   return (
     <>
       <div
-        className="fixed pointer-events-none z-[9999] mix-blend-screen"
+        className="fixed pointer-events-none z-[9999]"
         style={{
           left: position.x,
           top: position.y,
@@ -63,10 +63,11 @@ export function CursorGlow() {
         }}
       >
         <div
-          className="rounded-full bg-gold-400/30 blur-xl"
+          className="rounded-full blur-xl"
           style={{
             width: isHovering ? 60 : 30,
             height: isHovering ? 60 : 30,
+            backgroundColor: 'rgba(6, 182, 212, 0.35)',
             transition: 'width 0.3s ease, height 0.3s ease',
           }}
         />
@@ -79,13 +80,14 @@ export function CursorGlow() {
           transform: 'translate(-50%, -50%)',
           opacity: isVisible ? 1 : 0,
           transition: 'opacity 0.3s ease',
+          mixBlendMode: 'difference',
         }}
       >
         <div
-          className="rounded-full border border-gold-400/60"
+          className="rounded-full border-2 border-white"
           style={{
-            width: isHovering ? 40 : 8,
-            height: isHovering ? 40 : 8,
+            width: isHovering ? 40 : 10,
+            height: isHovering ? 40 : 10,
             transition: 'width 0.3s ease, height 0.3s ease',
           }}
         />
