@@ -201,7 +201,7 @@ function App() {
 
           <motion.div
             variants={fadeIn}
-            className="flex justify-center mb-8 text-gold-500"
+            className="flex justify-center mb-3 text-gold-500"
           >
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
@@ -211,19 +211,19 @@ function App() {
             </motion.div>
           </motion.div>
 
-          <motion.h2 variants={fadeIn} className="text-xl md:text-2xl font-light italic mb-8 font-serif text-slate-600">
+          <motion.h2 variants={fadeIn} className="text-xl md:text-2xl font-light italic mb-3 font-serif text-slate-600">
             <TypewriterText text="We joyfully invite" speed={60} />
           </motion.h2>
 
-          <motion.h1 variants={fadeIn} className="text-5xl md:text-7xl font-serif font-bold text-navy-900 mb-8 tracking-tight">
+          <motion.h1 variants={fadeIn} className="text-5xl md:text-7xl font-serif font-bold text-navy-900 mb-3 tracking-tight">
             <ScrambleText text={guestName} duration={1200} />
           </motion.h1>
 
-          <motion.h2 variants={fadeIn} className="text-xl md:text-2xl font-light italic mb-10 font-serif text-slate-600">
+          <motion.h2 variants={fadeIn} className="text-xl md:text-2xl font-light italic mb-4 font-serif text-slate-600">
             to celebrate the Walima of
           </motion.h2>
 
-          <motion.div variants={fadeIn} className="mb-10">
+          <motion.div variants={fadeIn} className="mb-6">
             <motion.h3
               className="text-3xl md:text-4xl font-serif font-semibold text-navy-900 mb-2 relative inline-block"
               whileHover={{ scale: 1.02 }}
@@ -232,30 +232,30 @@ function App() {
               <span className="text-gradient">Haseeb Shah</span>
             </motion.h3>
             <motion.span
-              className="text-lg italic font-serif text-slate-500 block my-3"
+              className="text-lg italic font-serif text-slate-500 block my-1"
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
               &
             </motion.span>
             <motion.h3
-              className="text-3xl md:text-4xl font-serif font-semibold text-navy-900 mt-2 relative inline-block"
+              className="text-3xl md:text-4xl font-serif font-semibold text-navy-900 mt-0 relative inline-block"
               whileHover={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
               <span className="text-gradient">His Bride</span>
             </motion.h3>
           </motion.div>
+        </motion.div>
 
-          {/* Scroll Indicator */}
-          <motion.div
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gold-500/60"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
-            <ChevronDown className="w-5 h-5" />
-          </motion.div>
+        {/* Scroll Indicator */}
+        <motion.div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gold-500/60 z-20"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <ChevronDown className="w-5 h-5" />
         </motion.div>
       </motion.div>
 
