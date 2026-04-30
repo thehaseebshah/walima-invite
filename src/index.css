@@ -342,7 +342,7 @@
   position: absolute;
   width: 80px;
   height: 80px;
-  border: 2px solid rgba(212, 175, 55, 0.4);
+  border: 2.5px solid rgba(212, 175, 55, 0.7);
   pointer-events: none;
   transition: all 0.5s ease;
 }
@@ -351,7 +351,7 @@
 .corner-border::after {
   content: '';
   position: absolute;
-  background: rgba(212, 175, 55, 0.6);
+  background: rgba(212, 175, 55, 0.9);
 }
 
 .corner-border::before {
@@ -375,9 +375,9 @@
 .corner-border-tl::after {
   top: 0;
   left: 0;
-  width: 30px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(212,175,55,0.8), transparent);
+  width: 40px;
+  height: 2.5px;
+  background: linear-gradient(90deg, rgba(212,175,55,1), transparent);
 }
 
 .corner-border-tr {
@@ -395,9 +395,9 @@
 .corner-border-tr::after {
   top: 0;
   right: 0;
-  width: 30px;
-  height: 2px;
-  background: linear-gradient(-90deg, rgba(212,175,55,0.8), transparent);
+  width: 40px;
+  height: 2.5px;
+  background: linear-gradient(-90deg, rgba(212,175,55,1), transparent);
 }
 
 .corner-border-bl {
@@ -415,9 +415,9 @@
 .corner-border-bl::after {
   bottom: 0;
   left: 0;
-  width: 30px;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(212,175,55,0.8), transparent);
+  width: 40px;
+  height: 2.5px;
+  background: linear-gradient(90deg, rgba(212,175,55,1), transparent);
 }
 
 .corner-border-br {
@@ -435,14 +435,14 @@
 .corner-border-br::after {
   bottom: 0;
   right: 0;
-  width: 30px;
-  height: 2px;
-  background: linear-gradient(-90deg, rgba(212,175,55,0.8), transparent);
+  width: 40px;
+  height: 2.5px;
+  background: linear-gradient(-90deg, rgba(212,175,55,1), transparent);
 }
 
 /* Islamic geometric pattern overlay */
 .islamic-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L35 10L45 5L40 15L50 20L40 25L45 35L35 30L30 40L25 30L15 35L20 25L10 20L20 15L15 5L25 10L30 0Z' fill='none' stroke='%23D4AF37' stroke-opacity='0.06' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L35 10L45 5L40 15L50 20L40 25L45 35L35 30L30 40L25 30L15 35L20 25L10 20L20 15L15 5L25 10L30 0Z' fill='none' stroke='%23D4AF37' stroke-opacity='0.12' stroke-width='0.8'/%3E%3C/svg%3E");
   background-size: 60px 60px;
 }
 
@@ -450,7 +450,7 @@
 .hero-frame {
   position: absolute;
   inset: 16px;
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
   pointer-events: none;
   z-index: 5;
 }
@@ -459,5 +459,5 @@
   content: '';
   position: absolute;
   inset: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
 }

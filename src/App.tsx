@@ -7,6 +7,9 @@ import { GradientMesh } from './components/GradientMesh';
 import { ScrambleText, TypewriterText } from './components/AnimatedText';
 import { MagneticButton } from './components/MagneticButton';
 import { ParallaxLayer } from './components/ParallaxSection';
+import { DecorativeOrnaments } from './components/DecorativeOrnaments';
+import { OrnateDivider } from './components/OrnateDivider';
+import { CountdownTimer } from './components/CountdownTimer';
 
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || '';
 const REPO_OWNER = import.meta.env.VITE_REPO_OWNER || '';
@@ -142,6 +145,7 @@ function App() {
       <CursorGlow />
       <FloatingParticles />
       <GradientMesh />
+      <DecorativeOrnaments />
 
       {/* Scroll Progress Bar */}
       <motion.div
@@ -152,15 +156,15 @@ function App() {
       {/* Floating Decorative Elements */}
       <div className="fixed inset-0 pointer-events-none z-[2] overflow-hidden">
         <motion.div
-          className="absolute top-20 right-10 w-32 h-32 rounded-full border border-gold-400/10 animate-rotate-slow"
+          className="absolute top-20 right-10 w-32 h-32 rounded-full border-2 border-gold-400/25 animate-rotate-slow"
           style={{ y: scrollY * 0.05 }}
         />
         <motion.div
-          className="absolute top-40 left-20 w-20 h-20 rounded-full border border-gold-400/15 animate-rotate-slow"
+          className="absolute top-40 left-20 w-20 h-20 rounded-full border-2 border-gold-400/30 animate-rotate-slow"
           style={{ y: scrollY * -0.03, animationDirection: 'reverse', animationDuration: '40s' }}
         />
         <motion.div
-          className="absolute bottom-1/3 right-1/4 w-16 h-16 rounded-full bg-gold-400/5 animate-float"
+          className="absolute bottom-1/3 right-1/4 w-16 h-16 rounded-full bg-gold-400/15 animate-float"
           style={{ y: scrollY * 0.08 }}
         />
       </div>
@@ -175,62 +179,112 @@ function App() {
         <div className="absolute inset-0 islamic-pattern opacity-60 pointer-events-none" />
 
         {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #D4AF37 1px, transparent 0)`,
+        <div className="absolute inset-0 opacity-[0.08]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #D4AF37 1.5px, transparent 0)`,
           backgroundSize: '40px 40px',
         }} />
 
         {/* Animated rings */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[700px] h-[700px] rounded-full border border-gold-400/10 animate-rotate-slow" />
-          <div className="absolute w-[500px] h-[500px] rounded-full border border-gold-400/15 animate-rotate-slow" style={{ animationDirection: 'reverse', animationDuration: '45s' }} />
-          <div className="absolute w-[300px] h-[300px] rounded-full border border-gold-400/20 animate-rotate-slow" style={{ animationDuration: '60s' }} />
-          <div className="absolute w-[150px] h-[150px] rounded-full border-2 border-gold-400/10 animate-pulse-glow" />
+          <div className="w-[700px] h-[700px] rounded-full border border-gold-400/25 animate-rotate-slow" />
+          <div className="absolute w-[500px] h-[500px] rounded-full border border-gold-400/35 animate-rotate-slow" style={{ animationDirection: 'reverse', animationDuration: '45s' }} />
+          <div className="absolute w-[300px] h-[300px] rounded-full border-2 border-gold-400/40 animate-rotate-slow" style={{ animationDuration: '60s' }} />
+          <div className="absolute w-[150px] h-[150px] rounded-full border-2 border-gold-400/30 animate-pulse-glow" />
         </div>
 
         {/* Animated gradient orbs */}
         <motion.div
-          className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-gold-400/5 blur-3xl pointer-events-none"
+          className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-gold-400/10 blur-3xl pointer-events-none"
           animate={{ x: [0, 30, 0], y: [0, -20, 0], scale: [1, 1.2, 1] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full bg-gold-500/5 blur-3xl pointer-events-none"
+          className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full bg-gold-500/10 blur-3xl pointer-events-none"
           animate={{ x: [0, -20, 0], y: [0, 20, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
 
         {/* Bouncing material shapes */}
         <motion.div
-          className="absolute top-[15%] left-[10%] w-12 h-12 rounded-xl bg-gold-400/10 backdrop-blur-sm border border-gold-400/20 shadow-lg shadow-gold-400/10 pointer-events-none"
+          className="absolute top-[15%] left-[10%] w-12 h-12 rounded-xl bg-gold-400/25 backdrop-blur-sm border border-gold-400/40 shadow-lg shadow-gold-400/20 pointer-events-none"
           animate={{ y: [0, -50, 0], rotate: [0, 180, 360] }}
           transition={{ type: "spring", stiffness: 100, damping: 10, repeat: Infinity, repeatDelay: 0.5, delay: 0 }}
         />
         <motion.div
-          className="absolute top-[25%] right-[12%] w-8 h-8 rounded-full bg-gold-500/10 backdrop-blur-sm border border-gold-400/20 shadow-lg shadow-gold-400/10 pointer-events-none"
+          className="absolute top-[25%] right-[12%] w-8 h-8 rounded-full bg-gold-500/25 backdrop-blur-sm border border-gold-400/40 shadow-lg shadow-gold-400/20 pointer-events-none"
           animate={{ y: [0, 40, 0], x: [0, 20, 0] }}
           transition={{ type: "spring", stiffness: 120, damping: 12, repeat: Infinity, repeatDelay: 0.3, delay: 0.5 }}
         />
         <motion.div
-          className="absolute bottom-[20%] left-[15%] w-10 h-10 rounded-lg bg-gold-600/10 backdrop-blur-sm border border-gold-400/20 rotate-45 shadow-lg shadow-gold-400/10 pointer-events-none"
+          className="absolute bottom-[20%] left-[15%] w-10 h-10 rounded-lg bg-gold-600/25 backdrop-blur-sm border border-gold-400/40 rotate-45 shadow-lg shadow-gold-400/20 pointer-events-none"
           animate={{ y: [0, -35, 0], rotate: [45, 225, 45] }}
           transition={{ type: "spring", stiffness: 80, damping: 8, repeat: Infinity, repeatDelay: 0.8, delay: 1 }}
         />
         <motion.div
-          className="absolute bottom-[30%] right-[8%] w-14 h-14 rounded-2xl bg-gold-400/8 backdrop-blur-sm border border-gold-400/15 shadow-xl shadow-gold-400/10 pointer-events-none"
+          className="absolute bottom-[30%] right-[8%] w-14 h-14 rounded-2xl bg-gold-400/20 backdrop-blur-sm border border-gold-400/35 shadow-xl shadow-gold-400/20 pointer-events-none"
           animate={{ y: [0, 45, 0], scale: [1, 1.15, 1] }}
           transition={{ type: "spring", stiffness: 90, damping: 9, repeat: Infinity, repeatDelay: 0.6, delay: 1.5 }}
         />
         <motion.div
-          className="absolute top-[60%] left-[8%] w-6 h-6 rounded-full bg-gold-500/12 backdrop-blur-sm border border-gold-400/20 shadow-md shadow-gold-400/10 pointer-events-none"
+          className="absolute top-[60%] left-[8%] w-6 h-6 rounded-full bg-gold-500/30 backdrop-blur-sm border border-gold-400/40 shadow-md shadow-gold-400/20 pointer-events-none"
           animate={{ y: [0, -25, 0], x: [0, -15, 0] }}
           transition={{ type: "spring", stiffness: 150, damping: 15, repeat: Infinity, repeatDelay: 0.4, delay: 2 }}
         />
         <motion.div
-          className="absolute top-[10%] right-[25%] w-16 h-16 rounded-full bg-gold-400/5 backdrop-blur-sm border border-gold-400/10 shadow-xl shadow-gold-400/10 pointer-events-none"
-          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.7, 0.3] }}
+          className="absolute top-[10%] right-[25%] w-16 h-16 rounded-full bg-gold-400/15 backdrop-blur-sm border border-gold-400/25 shadow-xl shadow-gold-400/20 pointer-events-none"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
           transition={{ type: "spring", stiffness: 60, damping: 15, repeat: Infinity, repeatDelay: 1, delay: 0.8 }}
         />
+
+        {/* Additional large floating geometric shapes to fill empty spaces */}
+        <motion.div
+          className="absolute top-[8%] left-[5%] w-24 h-24 pointer-events-none opacity-[0.18]"
+          animate={{ rotate: [0, 360], y: [0, -20, 0] }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        >
+          <svg viewBox="0 0 100 100" fill="none" stroke="#D4AF37" strokeWidth="1.2">
+            <path d="M50 0 L61 35 L100 35 L68 57 L79 91 L50 70 L21 91 L32 57 L0 35 L39 35 Z" />
+            <circle cx="50" cy="50" r="20" />
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="absolute bottom-[15%] right-[5%] w-32 h-32 pointer-events-none opacity-[0.16]"
+          animate={{ rotate: [360, 0], y: [0, 15, 0] }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+        >
+          <svg viewBox="0 0 100 100" fill="none" stroke="#D4AF37" strokeWidth="1.2">
+            <rect x="10" y="10" width="80" height="80" rx="4" />
+            <rect x="25" y="25" width="50" height="50" rx="2" transform="rotate(45 50 50)" />
+            <circle cx="50" cy="50" r="15" />
+            <path d="M50 20 L50 80 M20 50 L80 50" />
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="absolute top-[45%] left-[3%] w-20 h-20 pointer-events-none opacity-[0.2]"
+          animate={{ rotate: [0, -360], x: [0, 10, 0] }}
+          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+        >
+          <svg viewBox="0 0 100 100" fill="none" stroke="#D4AF37" strokeWidth="1.2">
+            <polygon points="50,5 95,50 50,95 5,50" />
+            <polygon points="50,20 80,50 50,80 20,50" />
+            <circle cx="50" cy="50" r="12" />
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="absolute top-[30%] right-[3%] w-28 h-28 pointer-events-none opacity-[0.18]"
+          animate={{ rotate: [360, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+        >
+          <svg viewBox="0 0 100 100" fill="none" stroke="#D4AF37" strokeWidth="1.2">
+            <circle cx="50" cy="50" r="45" />
+            <circle cx="50" cy="50" r="30" />
+            <path d="M50 5 L50 95 M5 50 L95 50" />
+            <path d="M15 15 L85 85 M85 15 L15 85" />
+          </svg>
+        </motion.div>
 
         {/* Traditional corner borders */}
         <div className="corner-border corner-border-tl animate-ornament-float" style={{ animationDelay: '0s' }} />
@@ -240,6 +294,14 @@ function App() {
 
         {/* Hero frame */}
         <div className="hero-frame" />
+
+        {/* Very subtle vignette — kept light so decorations pop */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[4]"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 55%, rgba(253,251,247,0.15) 100%)',
+          }}
+        />
 
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#FDFBF7] pointer-events-none z-10" />
 
@@ -334,6 +396,14 @@ function App() {
             >
               <span className="text-gradient drop-shadow-sm">His Bride</span>
             </motion.h3>
+          </motion.div>
+
+          <motion.div variants={fadeIn} className="mt-2 mb-6">
+            <OrnateDivider delay={1.8} />
+          </motion.div>
+
+          <motion.div variants={fadeIn} className="mb-8">
+            <CountdownTimer targetDate="2026-05-03T13:00:00" />
           </motion.div>
         </motion.div>
 
