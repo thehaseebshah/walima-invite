@@ -396,7 +396,7 @@ function App() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
-              <span className="text-gradient drop-shadow-sm">Haseeb Shah</span>
+              <span className="text-black drop-shadow-sm">Haseeb Shah</span>
             </motion.h3>
             <motion.span
               className="text-xl italic font-serif text-gold-500/80 block my-2"
@@ -410,7 +410,7 @@ function App() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
-              <span className="text-gradient drop-shadow-sm">His Bride</span>
+              <span className="text-black drop-shadow-sm">His Wife</span>
             </motion.h3>
           </motion.div>
 
