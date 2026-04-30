@@ -19,7 +19,9 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     const nameParam = params.get('n');
     if (nameParam) {
-      const formattedName = decodeURIComponent(nameParam).replace(/[-_]/g, ' ');
+      const formattedName = decodeURIComponent(nameParam)
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/[-_]/g, ' ');
       const titleCase = formattedName.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
       setGuestName(titleCase);
     }
