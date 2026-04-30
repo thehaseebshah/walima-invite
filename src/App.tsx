@@ -651,8 +651,8 @@ function App() {
                   className="bg-navy-800/50 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-2xl border border-slate-700/50 relative overflow-hidden"
                 >
                   {/* Shimmer border effect */}
-                  <div className="absolute inset-0 rounded-2xl border border-gold-400/0 hover:border-gold-400/20 transition-colors duration-500" />
-                  <div className="absolute -inset-1 bg-gradient-to-r from-gold-400/0 via-gold-400/10 to-gold-400/0 rounded-2xl blur-xl opacity-0 hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 rounded-2xl border border-gold-400/0 hover:border-gold-400/20 transition-colors duration-500 pointer-events-none" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-gold-400/0 via-gold-400/10 to-gold-400/0 rounded-2xl blur-xl opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                   <div className="mb-8 relative z-10">
                     <label className="block text-lg font-medium mb-4 text-white">Are you coming?</label>
@@ -695,7 +695,7 @@ function App() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="mb-8 overflow-hidden"
+                        className="mb-8 overflow-hidden relative z-10"
                       >
                         <label className="block text-lg font-medium mb-4 text-white">Is your family coming with you?</label>
                         <div className="flex gap-4">
@@ -728,7 +728,7 @@ function App() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="mb-8 overflow-hidden"
+                        className="mb-8 overflow-hidden relative z-10"
                       >
                         <label className="block text-lg font-medium mb-4 text-white">
                           Number of family members attending (including you)?
