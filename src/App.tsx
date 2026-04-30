@@ -168,21 +168,78 @@ function App() {
       {/* Hero Section */}
       <motion.div
         ref={heroRef}
-        className="relative min-h-[85vh] flex items-center justify-center p-6 overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden"
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
       >
+        {/* Islamic geometric pattern background */}
+        <div className="absolute inset-0 islamic-pattern opacity-60 pointer-events-none" />
+
         {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
+        <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, #D4AF37 1px, transparent 0)`,
           backgroundSize: '40px 40px',
         }} />
 
         {/* Animated rings */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[600px] h-[600px] rounded-full border border-gold-400/10 animate-rotate-slow" />
-          <div className="absolute w-[400px] h-[400px] rounded-full border border-gold-400/15 animate-rotate-slow" style={{ animationDirection: 'reverse', animationDuration: '45s' }} />
-          <div className="absolute w-[200px] h-[200px] rounded-full border border-gold-400/20 animate-rotate-slow" style={{ animationDuration: '60s' }} />
+          <div className="w-[700px] h-[700px] rounded-full border border-gold-400/10 animate-rotate-slow" />
+          <div className="absolute w-[500px] h-[500px] rounded-full border border-gold-400/15 animate-rotate-slow" style={{ animationDirection: 'reverse', animationDuration: '45s' }} />
+          <div className="absolute w-[300px] h-[300px] rounded-full border border-gold-400/20 animate-rotate-slow" style={{ animationDuration: '60s' }} />
+          <div className="absolute w-[150px] h-[150px] rounded-full border-2 border-gold-400/10 animate-pulse-glow" />
         </div>
+
+        {/* Animated gradient orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-gold-400/5 blur-3xl pointer-events-none"
+          animate={{ x: [0, 30, 0], y: [0, -20, 0], scale: [1, 1.2, 1] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full bg-gold-500/5 blur-3xl pointer-events-none"
+          animate={{ x: [0, -20, 0], y: [0, 20, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+
+        {/* Bouncing material shapes */}
+        <motion.div
+          className="absolute top-[15%] left-[10%] w-12 h-12 rounded-xl bg-gold-400/10 backdrop-blur-sm border border-gold-400/20 shadow-lg shadow-gold-400/10 pointer-events-none"
+          animate={{ y: [0, -50, 0], rotate: [0, 180, 360] }}
+          transition={{ type: "spring", stiffness: 100, damping: 10, repeat: Infinity, repeatDelay: 0.5, delay: 0 }}
+        />
+        <motion.div
+          className="absolute top-[25%] right-[12%] w-8 h-8 rounded-full bg-gold-500/10 backdrop-blur-sm border border-gold-400/20 shadow-lg shadow-gold-400/10 pointer-events-none"
+          animate={{ y: [0, 40, 0], x: [0, 20, 0] }}
+          transition={{ type: "spring", stiffness: 120, damping: 12, repeat: Infinity, repeatDelay: 0.3, delay: 0.5 }}
+        />
+        <motion.div
+          className="absolute bottom-[20%] left-[15%] w-10 h-10 rounded-lg bg-gold-600/10 backdrop-blur-sm border border-gold-400/20 rotate-45 shadow-lg shadow-gold-400/10 pointer-events-none"
+          animate={{ y: [0, -35, 0], rotate: [45, 225, 45] }}
+          transition={{ type: "spring", stiffness: 80, damping: 8, repeat: Infinity, repeatDelay: 0.8, delay: 1 }}
+        />
+        <motion.div
+          className="absolute bottom-[30%] right-[8%] w-14 h-14 rounded-2xl bg-gold-400/8 backdrop-blur-sm border border-gold-400/15 shadow-xl shadow-gold-400/10 pointer-events-none"
+          animate={{ y: [0, 45, 0], scale: [1, 1.15, 1] }}
+          transition={{ type: "spring", stiffness: 90, damping: 9, repeat: Infinity, repeatDelay: 0.6, delay: 1.5 }}
+        />
+        <motion.div
+          className="absolute top-[60%] left-[8%] w-6 h-6 rounded-full bg-gold-500/12 backdrop-blur-sm border border-gold-400/20 shadow-md shadow-gold-400/10 pointer-events-none"
+          animate={{ y: [0, -25, 0], x: [0, -15, 0] }}
+          transition={{ type: "spring", stiffness: 150, damping: 15, repeat: Infinity, repeatDelay: 0.4, delay: 2 }}
+        />
+        <motion.div
+          className="absolute top-[10%] right-[25%] w-16 h-16 rounded-full bg-gold-400/5 backdrop-blur-sm border border-gold-400/10 shadow-xl shadow-gold-400/10 pointer-events-none"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.7, 0.3] }}
+          transition={{ type: "spring", stiffness: 60, damping: 15, repeat: Infinity, repeatDelay: 1, delay: 0.8 }}
+        />
+
+        {/* Traditional corner borders */}
+        <div className="corner-border corner-border-tl animate-ornament-float" style={{ animationDelay: '0s' }} />
+        <div className="corner-border corner-border-tr animate-ornament-float" style={{ animationDelay: '1.5s' }} />
+        <div className="corner-border corner-border-bl animate-ornament-float" style={{ animationDelay: '3s' }} />
+        <div className="corner-border corner-border-br animate-ornament-float" style={{ animationDelay: '4.5s' }} />
+
+        {/* Hero frame */}
+        <div className="hero-frame" />
 
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#FDFBF7] pointer-events-none z-10" />
 
@@ -192,22 +249,38 @@ function App() {
           animate="visible"
           variants={staggerContainer}
         >
-          <motion.div variants={fadeIn} className="mb-4">
-            <span className="uppercase tracking-[0.3em] text-xs font-semibold text-gold-600 animate-shimmer inline-block px-4 py-2 rounded-full border border-gold-400/20">
-              <Sparkles className="w-3 h-3 inline mr-2" />
+          <motion.div variants={fadeIn} className="mb-6">
+            <motion.span
+              className="uppercase tracking-[0.3em] text-xs font-semibold text-gold-600 inline-block px-5 py-2.5 rounded-full border border-gold-400/30 bg-white/40 backdrop-blur-sm"
+              whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(212,175,55,0.15)' }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <motion.span
+                animate={{ rotate: [0, 15, -15, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="inline-block mr-2"
+              >
+                <Sparkles className="w-3 h-3 inline" />
+              </motion.span>
               In the name of Allah, the Most Gracious, the Most Merciful
-            </span>
+            </motion.span>
           </motion.div>
 
           <motion.div
             variants={fadeIn}
-            className="flex justify-center mb-3 text-gold-500"
+            className="flex justify-center mb-4 text-gold-500"
           >
             <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ scale: [1, 1.25, 1], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className="relative"
             >
-              <Heart className="w-8 h-8 fill-gold-500" />
+              <Heart className="w-10 h-10 fill-gold-500 drop-shadow-lg" />
+              <motion.div
+                className="absolute inset-0 rounded-full bg-gold-400/20 blur-xl"
+                animate={{ scale: [0.8, 1.4, 0.8], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
             </motion.div>
           </motion.div>
 
@@ -223,39 +296,66 @@ function App() {
             to celebrate the Walima of
           </motion.h2>
 
-          <motion.div variants={fadeIn} className="mb-6">
+          <motion.div variants={fadeIn} className="mb-8 relative">
+            {/* Floating decorative stars */}
+            <motion.div
+              className="absolute -left-8 top-0 text-gold-400/30"
+              animate={{ y: [0, -10, 0], rotate: [0, 180, 360], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Sparkles className="w-5 h-5" />
+            </motion.div>
+            <motion.div
+              className="absolute -right-8 top-0 text-gold-400/30"
+              animate={{ y: [0, 10, 0], rotate: [0, -180, -360], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            >
+              <Sparkles className="w-5 h-5" />
+            </motion.div>
+
             <motion.h3
-              className="text-3xl md:text-4xl font-serif font-semibold text-navy-900 mb-2 relative inline-block"
-              whileHover={{ scale: 1.02 }}
+              className="text-3xl md:text-5xl font-serif font-semibold text-navy-900 mb-2 relative inline-block"
+              whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
-              <span className="text-gradient">Haseeb Shah</span>
+              <span className="text-gradient drop-shadow-sm">Haseeb Shah</span>
             </motion.h3>
             <motion.span
-              className="text-lg italic font-serif text-slate-500 block my-1"
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="text-xl italic font-serif text-gold-500/80 block my-2"
+              animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.1, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
               &
             </motion.span>
             <motion.h3
-              className="text-3xl md:text-4xl font-serif font-semibold text-navy-900 mt-0 relative inline-block"
-              whileHover={{ scale: 1.02 }}
+              className="text-3xl md:text-5xl font-serif font-semibold text-navy-900 mt-0 relative inline-block"
+              whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
-              <span className="text-gradient">His Bride</span>
+              <span className="text-gradient drop-shadow-sm">His Bride</span>
             </motion.h3>
           </motion.div>
         </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gold-500/60 z-20"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-8 left-0 right-0 mx-auto flex flex-col items-center gap-2 text-gold-500/70 z-20 w-fit"
+          animate={{ y: [0, 12, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
-          <ChevronDown className="w-5 h-5" />
+          <motion.div
+            className="flex flex-col items-center gap-1 px-4 py-2 rounded-full border border-gold-400/20 bg-white/30 backdrop-blur-sm"
+            whileHover={{ scale: 1.1, borderColor: 'rgba(212,175,55,0.5)' }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <span className="text-xs uppercase tracking-[0.2em] font-medium">Scroll</span>
+            <motion.div
+              animate={{ y: [0, 4, 0], opacity: [0.6, 1, 0.6] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown className="w-5 h-5" />
+            </motion.div>
+          </motion.div>
         </motion.div>
       </motion.div>
 

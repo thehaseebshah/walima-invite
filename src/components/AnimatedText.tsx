@@ -13,6 +13,11 @@ export function ScrambleText({ text, className = '', delay = 0, duration = 1500 
   const [displayText, setDisplayText] = useState(text);
   const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    setDisplayText(text);
+  }, [text]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -20,7 +25,7 @@ export function ScrambleText({ text, className = '', delay = 0, duration = 1500 
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
           const startTime = Date.now();
-          const interval = setInterval(() => {
+          intervalRef.current = setInterval(() => {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
@@ -36,13 +41,11 @@ export function ScrambleText({ text, className = '', delay = 0, duration = 1500 
 
             setDisplayText(result);
 
-            if (progress >= 1) {
-              clearInterval(interval);
-              setDisplayText(text);
+            if (progress >= 1 && intervalRef.current) {
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
             }
           }, 30);
-
-          return () => clearInterval(interval);
         }
       },
       { threshold: 0.3 }
@@ -52,7 +55,13 @@ export function ScrambleText({ text, className = '', delay = 0, duration = 1500 
       observer.observe(ref.current);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [text, delay, duration, hasAnimated]);
 
   return (

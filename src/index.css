@@ -266,3 +266,198 @@
     transform: translateY(-5px);
   }
 }
+
+@keyframes ornament-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+    opacity: 1;
+  }
+}
+
+@keyframes border-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes lantern-sway {
+  0%, 100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(-10px);
+  }
+}
+
+@keyframes sparkle-pop {
+  0%, 100% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-ornament-float {
+  animation: ornament-float 6s ease-in-out infinite;
+}
+
+.animate-lantern-sway {
+  animation: lantern-sway 4s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.animate-sparkle-pop {
+  animation: sparkle-pop 3s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Traditional Islamic corner border styles */
+.corner-border {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  pointer-events: none;
+  transition: all 0.5s ease;
+}
+
+.corner-border::before,
+.corner-border::after {
+  content: '';
+  position: absolute;
+  background: rgba(212, 175, 55, 0.6);
+}
+
+.corner-border::before {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.corner-border-tl {
+  top: 24px;
+  left: 24px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-border-tl::before {
+  top: -6px;
+  left: -6px;
+}
+
+.corner-border-tl::after {
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(212,175,55,0.8), transparent);
+}
+
+.corner-border-tr {
+  top: 24px;
+  right: 24px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-border-tr::before {
+  top: -6px;
+  right: -6px;
+}
+
+.corner-border-tr::after {
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(-90deg, rgba(212,175,55,0.8), transparent);
+}
+
+.corner-border-bl {
+  bottom: 24px;
+  left: 24px;
+  border-right: none;
+  border-top: none;
+}
+
+.corner-border-bl::before {
+  bottom: -6px;
+  left: -6px;
+}
+
+.corner-border-bl::after {
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(212,175,55,0.8), transparent);
+}
+
+.corner-border-br {
+  bottom: 24px;
+  right: 24px;
+  border-left: none;
+  border-top: none;
+}
+
+.corner-border-br::before {
+  bottom: -6px;
+  right: -6px;
+}
+
+.corner-border-br::after {
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(-90deg, rgba(212,175,55,0.8), transparent);
+}
+
+/* Islamic geometric pattern overlay */
+.islamic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L35 10L45 5L40 15L50 20L40 25L45 35L35 30L30 40L25 30L15 35L20 25L10 20L20 15L15 5L25 10L30 0Z' fill='none' stroke='%23D4AF37' stroke-opacity='0.06' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+
+/* Hero frame border */
+.hero-frame {
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hero-frame::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.08);
+}
