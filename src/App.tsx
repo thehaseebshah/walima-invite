@@ -366,13 +366,13 @@ function App() {
           >
             {/* Transparent hover rectangle */}
             <motion.div
-              className="absolute inset-0 -m-6 rounded-2xl border border-gold-400/20 bg-white/5 backdrop-blur-sm pointer-events-none"
+              className="absolute inset-0 -m-6 rounded-2xl border-2 border-gold-400/60 bg-white/[0.02] backdrop-blur-[2px] pointer-events-none"
               initial={{ opacity: 0, scale: 0.95 }}
-              whileHover={{ opacity: 1, scale: 1, borderColor: 'rgba(212,175,55,0.5)' }}
+              whileHover={{ opacity: 1, scale: 1, borderColor: 'rgba(212,175,55,0.95)' }}
               transition={{ duration: 0.4 }}
             />
             <motion.div
-              className="absolute inset-0 -m-6 rounded-2xl bg-gradient-to-br from-gold-400/5 via-transparent to-gold-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              className="absolute inset-0 -m-6 rounded-2xl bg-gradient-to-br from-gold-400/[0.03] via-transparent to-gold-400/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
             />
 
             {/* Floating decorative stars */}
